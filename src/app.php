@@ -7,7 +7,7 @@ if(isset($_GET['post'])){
 else if(isset($_GET['view'])){
     $view = $_GET['view'];
 
-    require 'src/post/'.$view.'.php';
+    require 'src/'.$view.'.php';
 }
 else
     require 'src/home.php';
