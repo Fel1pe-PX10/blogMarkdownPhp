@@ -7,5 +7,14 @@
 </head>
 <body>
     <h1>Bienvenido a mi Blog</h1>
+    <?php
+    use Phelo\Blog\models\Post;
+    
+    $posts = Post::getPosts();
+
+    foreach($posts as $post){
+        echo "<div><a href='{$post->getUrl()}'>{$post->getPostName()}</a></div>";
+    }
+    ?>
 </body>
 </html>

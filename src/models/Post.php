@@ -2,6 +2,10 @@
 
 namespace Phelo\Blog\models;
 
+use League\CommonMark\CommonMarkConverter;
+
+use Error;
+
 class Post{
 
     public function __construct(private string $file)
@@ -10,10 +14,24 @@ class Post{
     }
 
     public function getContent(){
-        $stream = fopen($this->getFileName(), 'r');
-        $content = fread($stream, filesize($this->getFileName()));
+        $converter = new CommonMarkConverter(['html_input' => 'escape', 'allow_unsafe_links' => false]);
+        if(file_exists($this->getFileName())){
+            $stream = fopen($this->getFileName(), 'r');
+            $content = fread($stream, filesize($this->getFileName()));
 
-        echo $content;
+            return $converter->convert(($content));
+        }
+        else{
+            $fileUpdated = $this->getFileNameWithotDash();
+            if(file_exists($this->getFileName())){
+                $stream = fopen($this->getFileName(), 'r');
+                $content = fread($stream, filesize($this->getFileName()));
+
+                return $converter->convert(($content));
+            }
+        }
+
+        throw new Error('El archivo no existe');
     }
 
     public function getFileName(){
@@ -39,6 +57,21 @@ class Post{
     public function getUrl(){
         $url = substr($this->file, 0, strpos($this->file, '.md'));
         $title = str_replace(' ', '-', $url);
+
+        return "http://blogphpmarkdown.test/?post=".$title;
+    }
+
+    private function getFileNameWithotDash(){
+        $title = str_replace('-', ' ', $this->file);
+        $this->file = $title;
+
+        return $title;
+    }
+
+    public function getPostName(){
+        $title = $this->file;
+        $title = str_replace('-', ' ', $title);
+        $title = str_replace('.md', '', $title);
 
         return $title;
     }

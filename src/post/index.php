@@ -1,3 +1,9 @@
+<?php
+use Phelo\Blog\models\Post;
+
+$post = new Post($postName.'.md');
+
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,17 +12,8 @@
     <title>Document</title>
 </head>
 <body>
-    <h1>Mi primer post</h1>
     <?php
-    use Phelo\Blog\models\Post;
-
-   // $post = new Post('test.md');
-    $posts = Post::getPosts();
-
-    foreach($posts as $post){
-        echo "<div><a href='{$post->getUrl()}'>{$post->getFileName()}</a></div>";
-    }
-
+    echo $post->getContent();
     ?>
 </body>
 </html>
